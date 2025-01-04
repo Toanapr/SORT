@@ -1,16 +1,21 @@
 #include "headers/Algorithm.h"
 
-void bubbleSort(std::vector<int> &arr, unsigned long long &countComparisons)
+void shellSort(std::vector<int> &arr, unsigned long long &countComparison)
 {
     int n = arr.size();
-    for (int i = 0; ++countComparisons && i < n - 1; i++)
+
+    for (int gap = n / 2; ++countComparison && gap > 0; gap /= 2)
     {
-        for (int j = 0; ++countComparisons && j < n - i - 1; j++)
+        for (int i = gap; ++countComparison && i < n; i++)
         {
-            if (++countComparisons && arr[j] > arr[j + 1])
+            int temp = arr[i];
+
+            int j;
+            for (j = i; ++countComparison && j >= gap && ++countComparison && arr[j - gap] > temp; j -= gap)
             {
-                std::swap(arr[j], arr[j + 1]);
+                arr[j] = arr[j - gap];
             }
+            arr[j] = temp;
         }
     }
 }
@@ -41,6 +46,7 @@ void countingSort(std::vector<int> &arr, unsigned long long &countComparison)
 
     arr = std::move(res);
 }
+
 void flashSort(std::vector<int> &arr, unsigned long long &countComparison)
 {
     int n = arr.size();
@@ -204,14 +210,14 @@ void merge(std::vector<int> &arr, int left, int mid, int right, unsigned long lo
     }
 }
 
-void mergeSortRecur(std::vector<int> &arr, int left, int right, unsigned long long &countComparison)
+void mergeSortHelper(std::vector<int> &arr, int left, int right, unsigned long long &countComparison)
 {
     if (++countComparison && left < right)
     {
         int mid = (left + right) / 2;
 
-        mergeSortRecur(arr, left, mid, countComparison);
-        mergeSortRecur(arr, mid + 1, right, countComparison);
+        mergeSortHelper(arr, left, mid, countComparison);
+        mergeSortHelper(arr, mid + 1, right, countComparison);
 
         merge(arr, left, mid, right, countComparison);
     }
@@ -222,7 +228,7 @@ void mergeSort(std::vector<int> &arr, unsigned long long &countComparison)
     int left = 0;
     int right = arr.size() - 1;
 
-    mergeSortRecur(arr, left, right, countComparison);
+    mergeSortHelper(arr, left, right, countComparison);
 }
 
 int partition(std::vector<int> &arr, int left, int right, unsigned long long &countComparison)
@@ -251,7 +257,7 @@ int partition(std::vector<int> &arr, int left, int right, unsigned long long &co
     return i;
 }
 
-void quickSortRecursive(std::vector<int> &arr, int left, int right, unsigned long long &countComparison)
+void quickSortHelper(std::vector<int> &arr, int left, int right, unsigned long long &countComparison)
 {
     if (++countComparison && left >= right)
     {
@@ -260,13 +266,13 @@ void quickSortRecursive(std::vector<int> &arr, int left, int right, unsigned lon
 
     int pivot = partition(arr, left, right, countComparison);
 
-    quickSortRecursive(arr, left, pivot - 1, countComparison);
-    quickSortRecursive(arr, pivot, right, countComparison);
+    quickSortHelper(arr, left, pivot - 1, countComparison);
+    quickSortHelper(arr, pivot, right, countComparison);
 }
 
 void quickSort(std::vector<int> &arr, unsigned long long &countComparison)
 {
-    quickSortRecursive(arr, 0, arr.size() - 1, countComparison);
+    quickSortHelper(arr, 0, arr.size() - 1, countComparison);
 }
 
 void countSort(std::vector<int> &arr, int n, int pos, unsigned long long &countComparison)
@@ -362,22 +368,17 @@ void shakerSort(std::vector<int> &arr, unsigned long long &countComparison)
     }
 }
 
-void shellSort(std::vector<int> &arr, unsigned long long &countComparison)
+void bubbleSort(std::vector<int> &arr, unsigned long long &countComparisons)
 {
     int n = arr.size();
-
-    for (int gap = n / 2; ++countComparison && gap > 0; gap /= 2)
+    for (int i = 0; ++countComparisons && i < n - 1; i++)
     {
-        for (int i = gap; ++countComparison && i < n; i++)
+        for (int j = 0; ++countComparisons && j < n - i - 1; j++)
         {
-            int temp = arr[i];
-
-            int j;
-            for (j = i; ++countComparison && j >= gap && ++countComparison && arr[j - gap] > temp; j -= gap)
+            if (++countComparisons && arr[j] > arr[j + 1])
             {
-                arr[j] = arr[j - gap];
+                std::swap(arr[j], arr[j + 1]);
             }
-            arr[j] = temp;
         }
     }
 }
