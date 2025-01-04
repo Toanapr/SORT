@@ -50,68 +50,69 @@ void countingSort(std::vector<int> &arr, unsigned long long &countComparison)
 void flashSort(std::vector<int> &arr, unsigned long long &countComparison)
 {
     int n = arr.size();
-    long long min = arr[0], max = arr[0];
+    long long minValue = arr[0], maxValue = arr[0];
 
     for (int i = 0; ++countComparison && i < n; i++)
     {
-        if (++countComparison && min > arr[i])
-            min = arr[i];
-        if (++countComparison && max < arr[i])
-            max = arr[i];
+        if (++countComparison && minValue > arr[i])
+            minValue = arr[i];
+        if (++countComparison && maxValue < arr[i])
+            maxValue = arr[i];
     }
 
-    if (++countComparison && min == max)
+    if (++countComparison && minValue == maxValue)
         return;
 
-    long long m = 0.45 * n;
-    std::vector<int> l(m, 0);
+    long long bucketCount = 0.45 * n;
+    std::vector<int> bucket(bucketCount, 0);
 
     for (int i = 0; ++countComparison && i < n; i++)
     {
-        long long k = floor((m - 1) * (arr[i] - min) * 1.0 / (max - min));
-        l[k]++;
+        long long bucketIndex = floor((bucketCount - 1) * (arr[i] - minValue) * 1.0 / (maxValue - minValue));
+        bucket[bucketIndex]++;
     }
 
-    for (int i = 1; ++countComparison && i < m; i++)
+    for (int i = 1; ++countComparison && i < bucketCount; i++)
     {
-        l[i] += l[i - 1];
+        bucket[i] += bucket[i - 1];
     }
 
-    int move = 0;
-    int flash = 0;
-    int hold = 0;
-    long long k = 0;
-    int i = 0;
+    int totalMoves = 0;
+    int flashValue = 0;
+    int holdValue = 0;
+    long long bucketIndex = 0;
+    int currentIndex = 0;
 
-    while (++countComparison && move < n - 1)
+    while (++countComparison && totalMoves < n - 1)
     {
-        while (++countComparison && i > l[k] - 1)
+        while (++countComparison && currentIndex > bucket[bucketIndex] - 1)
         {
-            i++;
-            if (++countComparison && i >= n) break;
-            k = floor((m - 1) * (arr[i] - min) / (max - min));
+            currentIndex++;
+            if (++countComparison && currentIndex >= n) break;
+            bucketIndex = floor((bucketCount - 1) * (arr[currentIndex] - minValue) / (maxValue - minValue));
         }
 
-        if (++countComparison && i >= n) break;
+        if (++countComparison && currentIndex >= n) break;
 
-        flash = arr[i];
-        if (++countComparison && k < 0)
+        flashValue = arr[currentIndex];
+        if (++countComparison && bucketIndex < 0)
             break;
 
-        while (++countComparison && i != l[k])
+        while (++countComparison && currentIndex != bucket[bucketIndex])
         {
-            k = floor((m - 1) * (flash - min) / (max - min));
-            if ((++countComparison && k < 0) || (++countComparison && k >= m)) break;
-            --l[k];
-            hold = arr[l[k]];
-            arr[l[k]] = flash;
-            flash = hold;
-            move++;
+            bucketIndex = floor((bucketCount - 1) * (flashValue - minValue) / (maxValue - minValue));
+            if ((++countComparison && bucketIndex < 0) || (++countComparison && bucketIndex >= bucketCount)) break;
+            --bucket[bucketIndex];
+            holdValue = arr[bucket[bucketIndex]];
+            arr[bucket[bucketIndex]] = flashValue;
+            flashValue = holdValue;
+            totalMoves++;
         }
     }
 
     insertionSort(arr, countComparison);
 }
+
 
 void heapify(std::vector<int> &arr, int n, int i, unsigned long long &countComparison)
 {
@@ -267,7 +268,7 @@ void quickSortHelper(std::vector<int> &arr, int left, int right, unsigned long l
     int pivot = partition(arr, left, right, countComparison);
 
     quickSortHelper(arr, left, pivot - 1, countComparison);
-    quickSortHelper(arr, pivot, right, countComparison);
+    quickSortHelper(arr, pivot + 1, right, countComparison);
 }
 
 void quickSort(std::vector<int> &arr, unsigned long long &countComparison)

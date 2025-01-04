@@ -171,7 +171,7 @@ void Command3(const std::string &algorithm, const int &input_size, const std::st
         {
             std::cout << " " << std::endl;
         }
-
+        // writeFile("output_" + std::to_string(i + 1) + ".txt", arr[i]);
         std::cout << "\n";
     }
 }
