@@ -8,54 +8,101 @@
 
 int main(int argc, char* argv[]) 
 {
-    // if (argc != 2) {
-    //     std::cerr << "Usage: " << argv[0] << " <algorithm-name>\n";
-    //     std::cerr << "Available algorithms: selection-sort, insertion-sort, bubble-sort, shaker-sort, "
-    //               << "shell-sort, heap-sort, merge-sort, quick-sort, counting-sort, radix-sort, flash-sort\n";
-    //     return 1;
-    // }
+    if (argc != 2) {
+        std::cerr << "Usage: " << argv[0] << " <algorithm-name>\n";
+        std::cerr << "Available algorithms: selection-sort, insertion-sort, bubble-sort, shaker-sort, "
+                  << "shell-sort, heap-sort, merge-sort, quick-sort, counting-sort, radix-sort, flash-sort\n";
+        return 1;
+    }
 
-    // std::string algorithm = argv[1];
-    // if (!isValidAlgorithm(algorithm)) {
-    //     std::cerr << "Invalid algorithm name\n";
-    //     return 1;
-    // }
-    std::string algorithm[] = {"shaker-sort", "shell-sort", "heap-sort", "merge-sort", "quick-sort", "counting-sort", "radix-sort", "flash-sort", "selection-sort", "insertion-sort", "bubble-sort"};
+    std::string algorithm = argv[1];
+    if (!isValidAlgorithm(algorithm)) {
+        std::cerr << "Invalid algorithm name\n";
+        return 1;
+    }
 
-    int arrSize = 10000;
-    std::vector<int> arr_core(arrSize);
-
+    std::vector<int> arr(300000);
+    int arrSize;
     // GenerateData(arr, 0);
-    // writeFile("input.txt", arr);
-
+    // writeFile("input_500k.txt", arr);
     unsigned long long countComparison = 0;
     std::string input_file = "input.txt";
 
-    readFile(input_file, arr_core, arrSize);
+    readFile(input_file, arr, arrSize);
 
     double time_taken = 0;
-    for (int j = 0; j < 11; j++)
+    int n = 6;
+    for (int i = 0; i < n; i++)
     {
-        time_taken = 0;
-        std::vector<int> arr(arrSize);
-        arr = arr_core;
-        for (int i = 0; i < 500; i++)
-        {
-            countComparison = 0;
-            auto start = std::chrono::high_resolution_clock::now();
-            algorithmFunctionMap.at(algorithm[j])(arr, countComparison);
-            auto end = std::chrono::high_resolution_clock::now();
-            std::chrono::duration<double> runTime = (end - start) * 1000.0;
-            // std::cout << i + 1 << ". Time taken: " << runTime.count() << " ms" << std::endl;
-            time_taken += runTime.count();
-        }
-
-        std::cout << "\nAlgorithm: " << algorithm[j] << std::endl;
-        std::cout << "Average time taken: " << time_taken / 500.0 << " ms" << std::endl;
+        std::vector<int> arr1(10000);
+        arr1 = arr;
+        countComparison = 0;
+        auto start = std::chrono::high_resolution_clock::now();
+        algorithmFunctionMap.at(algorithm)(arr1, countComparison);
+        auto end = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> runTime = (end - start) * 1000.0;
+        std::cout << "Time taken: " << runTime.count() << " ms" << "\t";
         std::cout << "Comparisons: " << countComparison << std::endl;
+        time_taken += runTime.count();
     }
+
+    std::cout << "\nAverage time taken: " << time_taken / n*1.0 << " ms" << std::endl;
+    std::cout << "Comparisons: " << countComparison << std::endl;
+
     return 0;
 }
+
+// int main(int argc, char* argv[]) 
+// {
+//     // if (argc != 2) {
+//     //     std::cerr << "Usage: " << argv[0] << " <algorithm-name>\n";
+//     //     std::cerr << "Available algorithms: selection-sort, insertion-sort, bubble-sort, shaker-sort, "
+//     //               << "shell-sort, heap-sort, merge-sort, quick-sort, counting-sort, radix-sort, flash-sort\n";
+//     //     return 1;
+//     // }
+
+//     // std::string algorithm = argv[1];
+//     // if (!isValidAlgorithm(algorithm)) {
+//     //     std::cerr << "Invalid algorithm name\n";
+//     //     return 1;
+//     // }
+//     std::string algorithm[] = {"shaker-sort", "shell-sort", "heap-sort", "merge-sort", "quick-sort", "counting-sort", "radix-sort", "flash-sort", "selection-sort", "insertion-sort", "bubble-sort"};
+
+//     int arrSize = 10000;
+//     std::vector<int> arr_core(arrSize);
+
+//     // GenerateData(arr, 0);
+//     // writeFile("input.txt", arr);
+
+//     unsigned long long countComparison = 0;
+//     std::string input_file = "input.txt";
+
+//     readFile(input_file, arr_core, arrSize);
+
+//     double time_taken = 0;
+//     for (int j = 0; j < 11; j++)
+//     {
+//         time_taken = 0;
+//         std::vector<int> arr(arrSize);
+//         arr = arr_core;
+//         for (int i = 0; i < 100; i++)
+//         {
+//             countComparison = 0;
+//             auto start = std::chrono::high_resolution_clock::now();
+//             algorithmFunctionMap.at(algorithm[j])(arr, countComparison);
+//             auto end = std::chrono::high_resolution_clock::now();
+//             std::chrono::duration<double> runTime = (end - start) * 1000.0;
+//             // std::cout << i + 1 << ". Time taken: " << runTime.count() << " ms" << std::endl;
+//             std::cout << i + 1 << " ";
+//             time_taken += runTime.count();
+//         }
+        
+//         std::cout << "\n\nAlgorithm: " << algorithm[j] << std::endl;
+//         std::cout << "Average time taken: " << time_taken / 100.0 << " ms" << std::endl;
+//         std::cout << "Comparisons: " << countComparison << std::endl;
+//     }
+//     return 0;
+// }
 // int main(int argc, char *argv[]) {
 //     // Basic argument count check
 //     if (argc < 2) {
